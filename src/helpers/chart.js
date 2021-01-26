@@ -7,6 +7,7 @@ function getDayLines(data, precision = 'day') {
   if (getPrecisionType(precision) !== 'hour') {
     return [];
   }
+
   const lastIndex = data.length - 1;
   return data.filter(({ ts }, i) => {
     if (i === 0 || i === lastIndex) {
@@ -20,7 +21,8 @@ function getDayLines(data, precision = 'day') {
 }
 
 const getTimeTickFormatter = _.memoize(precisionType => {
-  const format = tickFormat => tick => moment(tick).format(tickFormat);
+  const format = tickFormat => tick => moment.parseZone(tick).format(tickFormat);
+
   switch (precisionType) {
     case 'hour':
       return format('h:mma');
@@ -38,7 +40,7 @@ const getTimeTickFormatter = _.memoize(precisionType => {
 });
 
 const getTooltipLabelFormatter = _.memoize(precisionType => {
-  const format = labelFormat => label => moment(label).format(labelFormat);
+  const format = labelFormat => label => moment.parseZone(label).format(labelFormat);
   switch (precisionType) {
     case 'hour':
       return format('MMM Do [at] LT');
