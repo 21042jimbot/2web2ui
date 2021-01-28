@@ -181,7 +181,8 @@ export const formatInputTime = time => moment(time).format(FORMATS.TIME);
 export const parseDate = str => moment(str, FORMATS.INPUT_DATES, true);
 export const parseTime = str => moment(str, FORMATS.INPUT_TIMES, true);
 export const parseDatetime = (...args) => moment(args.join(' '), FORMATS.INPUT_DATETIMES, true);
-
+export const parseDateTimeTz = (timezone, ...args) =>
+  moment.tz(args.join(' '), FORMATS.INPUT_DATETIMES, true, timezone);
 export const fillByDate = ({ dataSet, fill = {}, from, to } = {}) => {
   const orderedData = dataSet.sort((a, b) => new Date(a.date) - new Date(b.date));
   let filledDataSet = [];

@@ -12,6 +12,7 @@ import {
   getNextHour,
   isSameDate,
   formatToTimezone,
+  getLocalTimezone,
 } from 'src/helpers/date';
 import {
   roundBoundaries,
@@ -343,7 +344,7 @@ export function DatePicker(props) {
     selectPrecision,
     id,
     label,
-    timezone,
+    timezone = getLocalTimezone(),
   } = props;
 
   const dateFormat = dateFieldFormat || DATE_FORMAT;

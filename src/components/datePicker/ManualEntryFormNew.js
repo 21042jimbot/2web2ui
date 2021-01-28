@@ -2,7 +2,7 @@ import React, { useReducer, useEffect, useCallback } from 'react';
 import moment from 'moment';
 import _ from 'lodash';
 import { Grid, TextField } from 'src/components/matchbox';
-import { formatInputDate, formatInputTime, parseDatetime } from 'src/helpers/date';
+import { formatToTimezone, parseDateTimeTz } from 'src/helpers/date';
 import {
   getValidDateRange,
   getPrecision as getRawPrecision,
@@ -27,17 +27,20 @@ const actionTypes = {
   syncProps: 'SYNC',
 };
 
+const TIME_FORMAT = "h:mmaaaaa'm'";
+const DATE_FORMAT = 'yyyy-MM-dd';
+
 export function ManualEntryForm(props) {
   const [state, dispatch] = useReducer((state, { type, payload }) => {
     switch (type) {
       case actionTypes.syncProps: {
-        const { to, from } = payload;
+        const { to, from, timezone } = payload;
         return {
           ...state,
-          toDate: formatInputDate(to),
-          toTime: formatInputTime(to),
-          fromDate: formatInputDate(from),
-          fromTime: formatInputTime(from),
+          toDate: formatToTimezone(to, DATE_FORMAT, timezone),
+          toTime: formatToTimezone(to, TIME_FORMAT, timezone),
+          fromDate: formatToTimezone(from, DATE_FORMAT, timezone),
+          fromTime: formatToTimezone(from, TIME_FORMAT, timezone),
         };
       }
       case actionTypes.fieldChange: {
@@ -50,16 +53,16 @@ export function ManualEntryForm(props) {
 
   const getPrecision = props.useMetricsRollup ? getRollupPrecision : getRawPrecision;
 
-  const syncPropsToState = useCallback(({ to, from }) => {
+  const syncPropsToState = useCallback(({ to, from, timezone }) => {
     dispatch({
       type: actionTypes.syncProps,
-      payload: { to, from },
+      payload: { to, from, timezone },
     });
   }, []);
 
   useEffect(() => {
-    syncPropsToState({ to: props.to, from: props.from });
-  }, [syncPropsToState, props.to, props.from]);
+    syncPropsToState({ to: props.to, from: props.from, timezone: props.timezone });
+  }, [syncPropsToState, props.to, props.from, props.timezone]);
 
   const handleFieldChange = e => {
     dispatch({ type: actionTypes.fieldChange, payload: { [e.target.id]: e.target.value } });
@@ -84,10 +87,11 @@ export function ManualEntryForm(props) {
   };
 
   function validate(e, shouldReset) {
-    const from = parseDatetime(state.fromDate, state.fromTime);
-    const to = parseDatetime(state.toDate, state.toTime);
     // allow for prop-level override of "now" (DI, etc.)
-    const { now, roundToPrecision, preventFuture, defaultPrecision } = props;
+    const { now, roundToPrecision, preventFuture, defaultPrecision, timezone } = props;
+
+    const from = parseDateTimeTz(timezone, state.fromDate, state.fromTime);
+    const to = parseDateTimeTz(timezone, state.toDate, state.toTime);
     try {
       const precision = getPrecision({ from, to, precision: defaultPrecision });
       const { to: roundedTo, from: roundedFrom } = getValidDateRange({
@@ -114,13 +118,13 @@ export function ManualEntryForm(props) {
   }
 
   const { toDate, toTime, fromDate, fromTime } = state;
-  const { roundToPrecision, selectedPrecision } = props;
+  const { roundToPrecision, selectedPrecision, timezone } = props;
 
   let precisionLabel = null;
   let precisionLabelValue;
   let shouldDisableTime;
-  const from = parseDatetime(fromDate, fromTime);
-  const to = parseDatetime(toDate, toTime);
+  const from = parseDateTimeTz(timezone, state.fromDate, state.fromTime);
+  const to = parseDateTimeTz(timezone, state.toDate, state.toTime);
 
   if (roundToPrecision) {
     try {
