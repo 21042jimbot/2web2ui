@@ -149,7 +149,7 @@ export function formatToTimezone(date, dateFormat, timeZone = getLocalTimezone()
   } else if (!dateFormat) {
     throw new Error('No date formatter passed in');
   }
-  return format(utcToZonedTime(date, timeZone), dateFormat, { timeZone });
+  return format(utcToZonedTime(new Date(date), timeZone), dateFormat, { timeZone });
 }
 
 export function formatDate(date, FORMAT = config.dateFormat) {
