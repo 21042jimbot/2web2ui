@@ -2,6 +2,7 @@ import moment from 'moment';
 import config from 'src/config';
 import { roundBoundaries } from './metrics';
 import { FORMATS } from 'src/constants';
+import { format, utcToZonedTime } from 'date-fns-tz';
 
 export const relativeDateOptions = [
   { value: 'hour', label: 'Last Hour' },
@@ -140,6 +141,15 @@ export function getDuration(dates, unit = 'hours') {
   const { from, to } = dates;
 
   return moment(to).diff(moment(from), unit);
+}
+
+export function formatToTimezone(date, dateFormat, timeZone = getLocalTimezone()) {
+  if (!date) {
+    throw new Error('Invalid date passed in');
+  } else if (!dateFormat) {
+    throw new Error('No date formatter passed in');
+  }
+  return format(utcToZonedTime(date, timeZone), dateFormat, { timeZone });
 }
 
 export function formatDate(date, FORMAT = config.dateFormat) {
