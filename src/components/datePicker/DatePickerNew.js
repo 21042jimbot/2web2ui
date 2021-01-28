@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { DateUtils } from 'react-day-picker';
-import { subMonths, format } from 'date-fns';
+import { subMonths } from 'date-fns';
 import {
   getStartOfDay,
   getEndOfDay,
@@ -11,6 +11,7 @@ import {
   getRelativeDates,
   getNextHour,
   isSameDate,
+  formatToTimezone,
 } from 'src/helpers/date';
 import {
   roundBoundaries,
@@ -34,6 +35,7 @@ import styled from 'styled-components';
 import { tokens } from '@sparkpost/design-tokens-hibana';
 import OGDatePicker from './DatePicker';
 import { useHibana } from 'src/context/HibanaContext';
+import { CalendarToday } from '@sparkpost/matchbox-icons';
 
 const ActionListWrapper = styled.div`
   width: 150px;
@@ -98,6 +100,17 @@ const datePickerReducer = (state, { type, payload }) => {
       return state;
     }
   }
+};
+
+const formatDateRange = ({ from, to, dateFormat = DATE_FORMAT, timezone }) => {
+  if (!from || !to) {
+    return 'Invalid Date Range';
+  }
+
+  const fromDate = formatToTimezone(from, dateFormat, timezone);
+  const toDate = formatToTimezone(to, dateFormat, timezone);
+
+  return `${fromDate} – ${toDate}`;
 };
 export function DatePicker(props) {
   const [state, dispatch] = useReducer(datePickerReducer, initialState);
@@ -330,6 +343,7 @@ export function DatePicker(props) {
     selectPrecision,
     id,
     label,
+    timezone,
   } = props;
 
   const dateFormat = dateFieldFormat || DATE_FORMAT;
@@ -357,7 +371,8 @@ export function DatePicker(props) {
       label={label}
       id={`date-field-${id}`}
       onClick={showDatePicker}
-      value={`${format(from, dateFormat)} – ${format(to, dateFormat)}`}
+      prefix={<CalendarToday />}
+      value={formatDateRange({ from, to, dateFormat, timezone })}
       readOnly
       onBlur={handleTextUpdate}
       error={error}
@@ -403,6 +418,7 @@ export function DatePicker(props) {
               onEnter={handleKeyDown}
               to={to}
               from={from}
+              timezone={timezone}
               roundToPrecision={roundToPrecision}
               preventFuture={preventFuture}
               selectedPrecision={selectedPrecision}
