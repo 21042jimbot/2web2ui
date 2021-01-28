@@ -20,8 +20,9 @@ function getDayLines(data, precision = 'day') {
   });
 }
 
-const getTimeTickFormatter = _.memoize(precisionType => {
-  const format = tickFormat => tick => moment.parseZone(tick).format(tickFormat);
+const getTimeTickFormatter = _.memoize((precisionType, { includeTimezone } = {}) => {
+  const formatFunction = includeTimezone ? moment.parseZone : moment;
+  const format = tickFormat => tick => formatFunction(tick).format(tickFormat);
 
   switch (precisionType) {
     case 'hour':
@@ -39,8 +40,9 @@ const getTimeTickFormatter = _.memoize(precisionType => {
   }
 });
 
-const getTooltipLabelFormatter = _.memoize(precisionType => {
-  const format = labelFormat => label => moment.parseZone(label).format(labelFormat);
+const getTooltipLabelFormatter = _.memoize((precisionType, { includeTimezone } = {}) => {
+  const formatFunction = includeTimezone ? moment.parseZone : moment;
+  const format = labelFormat => label => formatFunction(label).format(labelFormat);
   switch (precisionType) {
     case 'hour':
       return format('MMM Do [at] LT');
@@ -70,15 +72,15 @@ const getWeekPrecisionFormatter = to => {
   };
 };
 
-function getLineChartFormatters(precision, to = moment()) {
+function getLineChartFormatters(precision, to = moment(), { includeTimezone } = {}) {
   const formatters = {};
   const precisionType = getPrecisionType(precision);
 
-  formatters.xTickFormatter = getTimeTickFormatter(precisionType);
+  formatters.xTickFormatter = getTimeTickFormatter(precisionType, { includeTimezone });
   formatters.tooltipLabelFormatter =
     precisionType === 'week' //Can't put in case;switch in getToolTipLabelFormatter b/c memoization
       ? getWeekPrecisionFormatter(to)
-      : getTooltipLabelFormatter(precisionType);
+      : getTooltipLabelFormatter(precisionType, { includeTimezone });
 
   return formatters;
 }
