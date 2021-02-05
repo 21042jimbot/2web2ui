@@ -30,7 +30,7 @@ import {
   WindowEvent,
 } from 'src/components/matchbox';
 import ButtonWrapper from 'src/components/buttonWrapper';
-import ManualEntryForm from './ManualEntryFormNew';
+import ManualEntryForm from './ManualEntryFormV2';
 import { FORMATS } from 'src/constants';
 import styled from 'styled-components';
 import { tokens } from '@sparkpost/design-tokens-hibana';

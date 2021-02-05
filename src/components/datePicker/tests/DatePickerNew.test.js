@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { DatePicker } from '../DatePickerNew';
+import { DatePicker } from '../DatePickerV2';
 import styles from '../DatePicker.module.scss';
 import utc from 'src/__testHelpers__/time';
 import TestApp from 'src/__testHelpers__/TestApp';
