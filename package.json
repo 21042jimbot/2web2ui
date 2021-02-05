@@ -16,7 +16,7 @@
     "test-ci": "CI=true npm test -- --colors --maxWorkers=2",
     "test-integration": "TZ=America/New_York cypress open --config-file cypress.dev.json",
     "test-integration-headless": "TZ=America/New_York cypress run --config-file cypress.dev.json",
-    "test-integration-ci": "npm run serve-app & wait-on http://localhost:5000 && TZ=America/New_York cypress run --config-file cypress.ci.json"
+    "test-integration-ci": "npm run serve-app & wait-on http://localhost:5000 && TZ=America/New_York cypress run --config-file cypress.ci.json --reporter cypress-circleci-reporter"
   },
   "husky": {
     "hooks": {
