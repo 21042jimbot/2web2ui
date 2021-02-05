@@ -138,17 +138,17 @@ workflows:
   version: 2
   test-and-build:
     jobs:
-      # - 'Unit Testing'
+      - 'Unit Testing'
       - 'Build'
-      # - 'Integration Testing':
-      #     requires:
-      #       - 'Build'
+      - 'Integration Testing':
+          requires:
+            - 'Build'
 
       # Uncomment these jobs to run targeted integration tests by passing in
       # the targeted filename to run an individual spec or groups of specs.
       # See: https://docs.cypress.io/guides/guides/command-line.html#cypress-run for formatting tips.
       #
-      - 'Integration Testing - Targeted':
-          specs: "./cypress/tests/integration/events/detailsPage.spec.js"
-          requires:
-            - 'Build'
+      # - 'Integration Testing - Targeted':
+      #     specs: "./cypress/tests/integration/events/detailsPage.spec.js"
+      #     requires:
+      #       - 'Build'
