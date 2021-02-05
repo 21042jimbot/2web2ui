@@ -8,7 +8,7 @@
   },
   "engineStrict": true,
   "scripts": {
-    "lint": "npx eslint src/",
+    "lint": "npx eslint cypress/**/*.spec.js",
     "start": "REACT_APP_VERSION=local-$USER-$(git rev-parse HEAD) node scripts/start.js",
     "serve-app": "npx serve -s build",
     "build": "node scripts/build.js",
@@ -25,7 +25,7 @@
     }
   },
   "lint-staged": {
-    "{cypress,src,.eslintplugin}/**/*.js": [
+    "{config,cypress,src,.eslintplugin}/**/*[.spec][.test].js": [
       "eslint --fix",
       "git add"
     ],
