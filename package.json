@@ -8,7 +8,6 @@
   },
   "engineStrict": true,
   "scripts": {
-    "lint": "npx eslint cypress/**/*.spec.js",
     "start": "REACT_APP_VERSION=local-$USER-$(git rev-parse HEAD) node scripts/start.js",
     "serve-app": "npx serve -s build",
     "build": "node scripts/build.js",
