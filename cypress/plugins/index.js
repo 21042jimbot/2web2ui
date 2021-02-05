@@ -59,10 +59,6 @@ module.exports = (on, config) => {
     '*zuora.com',
   ];
   config.integrationFolder = 'cypress/tests/integration';
-  config.reporter = 'cypress-multi-reporters';
-  config.reporterOptions = {
-    configFile: 'cypress.reporter.json',
-  };
   config.viewportWidth = 1280;
   config.viewportHeight = 800;
 
