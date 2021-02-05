@@ -102,7 +102,7 @@ const TestDetails = ({
               <Bold>Started</Bold>
               <div>
                 {details.start_time
-                  ? format(parseISO(details.start_time), FORMATS.LONG_DATETIME)
+                  ? format(parseISO(details.start_time), FORMATS.DATE_FNS.LONG_DATETIME)
                   : null}
               </div>
             </Grid.Column>
@@ -110,7 +110,7 @@ const TestDetails = ({
               <Bold>Finished</Bold>
               <div>
                 {details.end_time ? (
-                  format(parseISO(details.end_time), FORMATS.LONG_DATETIME)
+                  format(parseISO(details.end_time), FORMATS.DATE_FNS.LONG_DATETIME)
                 ) : (
                   <Tag className={styles.StatusTag}>{details.status}</Tag>
                 )}

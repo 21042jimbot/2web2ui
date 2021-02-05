@@ -9,7 +9,7 @@ import {
   getRollupPrecision,
   getMomentPrecisionByDate,
 } from 'src/helpers/metrics';
-import styles from './ManualEntryFormNew.module.scss';
+import styles from './ManualEntryFormV2.module.scss';
 
 const DATE_PLACEHOLDER = '1970-01-20';
 const TIME_PLACEHOLDER = '12:00am';

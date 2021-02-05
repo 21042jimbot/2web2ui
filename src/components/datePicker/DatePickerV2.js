@@ -57,7 +57,7 @@ const StyledError = styled.span`
   line-height: ${tokens.lineHeight_200};
 `;
 
-const DATE_FORMAT = FORMATS.LONG_DATETIME;
+const DATE_FORMAT = FORMATS.DATE_FNS.LONG_DATETIME;
 
 const initialState = {
   isDatePickerOpen: false,

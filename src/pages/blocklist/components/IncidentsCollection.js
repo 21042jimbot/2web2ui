@@ -71,7 +71,7 @@ export const IncidentsCollection = props => {
               label="Date Range"
               relativeDateOptions={RELATIVE_DATE_OPTIONS}
               onChange={updateDateRange}
-              dateFieldFormat={FORMATS.DATE}
+              dateFieldFormat={FORMATS.DATE_FNS.DATE}
               hideManualEntry
             />
           </div>

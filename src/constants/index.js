@@ -13,21 +13,19 @@ export const DASHBOARD_ROUTE = '/dashboard';
 export const COOKIE_DOMAIN = '.sparkpost.com';
 
 export const FORMATS = {
-  DATE: 'MMM do', //date-fns
-  LONG_DATE: 'MMM do yyyy', // unused
-  SHORT_DATE: 'YYYY-MM-DD', //moment
-
-  TIME: 'h:mma', // moment
-  MILITARY_TIME: 'H:mm', // unused
-  ANTE_MILITARY_TIME: 'H:mma', // for 24 hour accidentally including am/pm (FE-61) // unused
-
-  DATETIME: 'MMM do h:mma', //date-fns
-  LONG_DATETIME: "MMM do yyyy h:mmaaaaa'm'", //date-fns //Bug with date-fns. token "a" not outputing lowercase
-  LONG_DATETIME_ALT: 'MMM DD, YYYY [at] h:mma', //moment
-
-  INPUT_DATES: ['YYYY-MM-DD'], //moment
-  INPUT_TIMES: ['h:mma', 'H:mm', 'H:mma'], //moment
-  INPUT_DATETIMES: ['YYYY-MM-DD h:mma', 'YYYY-MM-DD H:mm', 'YYYY-MM-DD H:mma'], //moment
+  MOMENT: {
+    SHORT_DATE: 'YYYY-MM-DD',
+    TIME: 'h:mma',
+    LONG_DATETIME_ALT: 'MMM DD, YYYY [at] h:mma',
+    INPUT_DATES: ['YYYY-MM-DD'],
+    INPUT_TIMES: ['h:mma', 'H:mm', 'H:mma'],
+    INPUT_DATETIMES: ['YYYY-MM-DD h:mma', 'YYYY-MM-DD H:mm', 'YYYY-MM-DD H:mma'],
+  },
+  DATE_FNS: {
+    DATE: 'MMM do',
+    DATETIME: 'MMM do h:mma',
+    LONG_DATETIME: "MMM do yyyy h:mmaaaaa'm'", //date-fns //Bug with date-fns. token "a" not outputing lowercase
+  },
 };
 
 export const RELATIVE_DATE_OPTIONS = ['hour', 'day', '7days', '10days', 'custom'];

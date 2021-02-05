@@ -30,7 +30,7 @@ import OGStyles from './DatePicker.module.scss';
 import hibanaStyles from './DatePickerHibana.module.scss';
 import styled from 'styled-components';
 
-const formatDateRange = ({ from, to, dateFormat = FORMATS.LONG_DATETIME }) => {
+const formatDateRange = ({ from, to, dateFormat = FORMATS.DATE_FNS.LONG_DATETIME }) => {
   if (!from || !to) {
     return 'Invalid Date Range';
   }
@@ -43,7 +43,7 @@ const StyledSelect = styled(Select)`
 `;
 
 export class DatePickerClassComponent extends Component {
-  DATE_FORMAT = FORMATS.LONG_DATETIME;
+  DATE_FORMAT = FORMATS.DATE_FNS.LONG_DATETIME;
   state = {
     showDatePicker: false,
     selecting: false,
