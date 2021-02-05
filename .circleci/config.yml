@@ -47,7 +47,7 @@ commands:
           path: test_results
       - store_artifacts:
           name: 'Upload test results'
-          path: /home/circleci/project/test_results
+          path: /root/project/test_results/cypress
           destination: cypress-test-results
       - store_artifacts:
           name: 'Upload videos'
