@@ -46,6 +46,10 @@ commands:
           name: 'Upload test report'
           path: /root/project/cypress/results
       - store_artifacts:
+          name: 'Upload test results'
+          path: /root/project/cypress/results
+          destination: cypress-test-results
+      - store_artifacts:
           name: 'Upload videos'
           path: /root/project/cypress/videos
           destination: cypress-videos
@@ -67,6 +71,7 @@ jobs:
             npm run test-ci $(circleci tests glob ".eslintplugin/**/*.test.js" "./src/**/*.test.js" "./scripts/**/*.test.js" |
             circleci tests split --split-by=timings)
       - store_test_results:
+          name: 'Upload test report'
           path: test_results
       - store_artifacts:
           name: 'Upload test results'
