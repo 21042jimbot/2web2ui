@@ -61,14 +61,13 @@ const getTooltipLabelFormatter = _.memoize((precisionType, { includeTimezone } =
 const getWeekPrecisionFormatter = to => {
   return label => {
     const format = momentTime => momentTime.format('MMM Do');
-    const startDate = format(moment(label));
-
+    const startDate = format(moment.parseZone(label));
     //If it's the last date, make the end date the to date; else, make the to date the next Saturday
-    if (moment(label).isSame(moment(to).weekday(0), 'day')) {
-      return `${startDate} - ${format(moment(to))}`;
+    if (moment.parseZone(label).isSame(moment.parseZone(to).weekday(0), 'day')) {
+      return `${startDate} - ${format(moment.parseZone(to))}`;
     }
 
-    return `${startDate} - ${format(moment(label).weekday(6))}`;
+    return `${startDate} - ${format(moment.parseZone(label).weekday(6))}`;
   };
 };
 
