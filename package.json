@@ -55,7 +55,7 @@
   },
   "jest-junit": {
     "outputDirectory": "test_results/junit",
-    "addFileAttribute": true
+    "addFileAttribute": "true"
   },
   "dependencies": {
     "@css-modules-theme/core": "^2.2.0",
