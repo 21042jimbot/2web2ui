@@ -13,6 +13,7 @@ cypress.env.json
 test-report.xml
 /cypress-coverage
 /jest-coverage
+/test_results
 
 # build report artifacts
 /build-reports
