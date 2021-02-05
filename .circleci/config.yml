@@ -44,10 +44,10 @@ commands:
     steps:
       - store_test_results:
           name: 'Upload test report'
-          path: /home/circleci/project/test_results/cypress
+          path: test_results
       - store_artifacts:
           name: 'Upload test results'
-          path: /home/circleci/project/test_results/cypress
+          path: /home/circleci/project/test_results
           destination: cypress-test-results
       - store_artifacts:
           name: 'Upload videos'
@@ -140,15 +140,15 @@ workflows:
     jobs:
       # - 'Unit Testing'
       - 'Build'
-      - 'Integration Testing':
-          requires:
-            - 'Build'
+      # - 'Integration Testing':
+      #     requires:
+      #       - 'Build'
 
       # Uncomment these jobs to run targeted integration tests by passing in
       # the targeted filename to run an individual spec or groups of specs.
       # See: https://docs.cypress.io/guides/guides/command-line.html#cypress-run for formatting tips.
       #
-      # - 'Integration Testing - Targeted':
-      #     specs: "./cypress/tests/integration/<your-glob-pattern-goes-here>.spec.js"
-      #     requires:
-      #       - 'Build'
+      - 'Integration Testing - Targeted':
+          specs: "./cypress/tests/integration/events/detailsPage.spec.js"
+          requires:
+            - 'Build'
