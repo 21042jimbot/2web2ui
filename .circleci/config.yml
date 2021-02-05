@@ -68,6 +68,10 @@ jobs:
             circleci tests split --split-by=timings)
       - store_test_results:
           path: test_results
+      - store_artifacts:
+          name: 'Upload test results'
+          path: /root/project/test_results
+          destination: jest-test-results
 
   'Build':
     <<: *defaults
