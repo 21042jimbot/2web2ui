@@ -70,7 +70,7 @@ jobs:
           path: test_results
       - store_artifacts:
           name: 'Upload test results'
-          path: /root/project/test_results
+          path: /home/circleci/project/test_results
           destination: jest-test-results
 
   'Build':
