@@ -54,7 +54,8 @@
     "url": "https://github.com/SparkPost/2web2ui/issues"
   },
   "jest-junit": {
-    "outputDirectory": "test_results/junit"
+    "outputDirectory": "test_results/junit",
+    "suiteNameTemplate": "{filename}"
   },
   "dependencies": {
     "@css-modules-theme/core": "^2.2.0",
