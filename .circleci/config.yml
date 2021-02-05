@@ -64,7 +64,7 @@ jobs:
       - setup
       - run:
           command:
-            npm run test-ci $(circleci tests glob "./src/**/*.test.js" "./scripts/**/*.test.js" |
+            npm run test-ci $(circleci tests glob ".eslintplugin/**/*.test.js" "./src/**/*.test.js" "./scripts/**/*.test.js" |
             circleci tests split --split-by=timings)
       - store_test_results:
           path: test_results
