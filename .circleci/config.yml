@@ -3,6 +3,7 @@ version: 2.1
 defaults: &defaults
   docker:
     - image: circleci/node:10.17.0
+  resource_class: medium+
 
 commands:
   # NPM caching commands based on: https://circleci.com/docs/2.0/caching/#restoring-cache
