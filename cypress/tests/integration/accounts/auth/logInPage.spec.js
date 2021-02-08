@@ -44,7 +44,7 @@ describe('The log in page', () => {
       method: 'POST',
       statusCode: 400,
       fixture: 'authenticate/400.post.json',
-      requestAlias: '@authenticatePostInvalidCredentials',
+      requestAlias: 'authenticatePostInvalidCredentials',
     });
     cy.findByLabelText('Email or Username').type('baduser123');
     cy.findByLabelText('Password').type('badpassword123');
