@@ -4,6 +4,11 @@ import { stubTrackingDomains, stubSubaccounts, stubUsersRequest } from '../helpe
 const PAGE_URL = '/domains';
 
 describe('tracking domains table', () => {
+  beforeEach(() => {
+    cy.stubAuth();
+    cy.login({ isStubbed: true });
+  });
+
   function verifyTableRow({ rowIndex, domainName, subaccount, status }) {
     cy.get('tbody tr')
       .eq(rowIndex)

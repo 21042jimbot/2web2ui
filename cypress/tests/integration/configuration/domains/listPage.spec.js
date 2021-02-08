@@ -1,4 +1,4 @@
-import { stubSendingDomains, stubSubaccounts } from '../helpers';
+import { stubSendingDomains, stubSubaccounts } from './helpers';
 
 const PAGE_URL = '/domains';
 
@@ -6,18 +6,10 @@ describe('The domains list page', () => {
   beforeEach(() => {
     cy.stubAuth();
     cy.login({ isStubbed: true });
-
-    cy.stubRequest({
-      url: '/api/v1/account',
-      fixture: 'account/200.get.json',
-      requestAlias: 'accountDomainsReq',
-    });
   });
 
   it('renders with a relevant page title and call-to-action, immediately redirecting to the sending domain view', () => {
     cy.visit(PAGE_URL);
-
-    cy.wait('@accountDomainsReq');
 
     cy.title().should('include', 'Domains');
     cy.findByRole('heading', { name: 'Domains' }).should('be.visible');
@@ -31,8 +23,6 @@ describe('The domains list page', () => {
 
   it('renders tabs that route to different sending/bounce/tracking domain views when clicked', () => {
     cy.visit(PAGE_URL);
-
-    cy.wait('@accountDomainsReq');
 
     // Going right to left since the first tab is already active!
     cy.findByRole('tab', { name: 'Tracking Domains' }).click({ force: true });

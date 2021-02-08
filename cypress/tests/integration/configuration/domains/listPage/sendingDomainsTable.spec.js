@@ -3,6 +3,11 @@ import { stubSendingDomains, stubSubaccounts, stubUsersRequest } from '../helper
 const PAGE_URL = '/domains';
 
 describe('sending domains table', () => {
+  beforeEach(() => {
+    cy.stubAuth();
+    cy.login({ isStubbed: true });
+  });
+
   function verifyTableRow({ rowIndex, domainName, creationDate, subaccount, statusTags }) {
     cy.get('tbody tr')
       .eq(rowIndex)

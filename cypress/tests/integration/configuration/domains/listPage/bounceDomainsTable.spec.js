@@ -4,6 +4,11 @@ import { stubSendingDomains, stubSubaccounts, stubUsersRequest } from '../helper
 const PAGE_URL = '/domains';
 
 describe('bounce domains table', () => {
+  beforeEach(() => {
+    cy.stubAuth();
+    cy.login({ isStubbed: true });
+  });
+
   it('renders a table after requesting sending domains - and renders only bounce domains', () => {
     stubSendingDomains({ fixture: 'sending-domains/200.get.multiple-results.json' });
     stubSubaccounts();
