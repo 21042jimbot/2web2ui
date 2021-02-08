@@ -147,6 +147,7 @@
     "cypress": "^6.3.0",
     "cypress-circleci-reporter": "^0.2.0",
     "cypress-file-upload": "^3.5.3",
+    "cypress-multi-reporters": "^1.4.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
     "enzyme-to-json": "^3.6.1",
