@@ -1,11 +1,3 @@
-/**
- * The following tests have some funky behavior between each test. Since we do not clear the auth
- * cookies between tests, the logged in state is preserved after finishing the final test. In order to successfully
- * re-run the tests (typically while editing them), stopping the test runner and restarting will
- * help clear the application state. This preservation of state between tests is very helpful with other features,
- * and mainly painful on this one. A necessary tradeoff!
- */
-
 describe('The log in page', () => {
   beforeEach(() => {
     cy.clearCookies(); // Clear auth-related cookies for this particular test
@@ -47,13 +39,12 @@ describe('The log in page', () => {
   });
 
   it('does not log in with an invalid username and password', () => {
-    cy.server();
-    cy.fixture('authenticate/400.post.json').as('authenticatePostInvalidCredentials');
-    cy.route({
-      method: 'POST',
+    cy.stubRequest({
       url: '/api/v1/authenticate',
-      status: 400,
-      response: '@authenticatePostInvalidCredentials',
+      method: 'POST',
+      statusCode: 400,
+      fixture: 'authenticate/400.post.json',
+      requestAlias: '@authenticatePostInvalidCredentials',
     });
     cy.findByLabelText('Email or Username').type('baduser123');
     cy.findByLabelText('Password').type('badpassword123');
