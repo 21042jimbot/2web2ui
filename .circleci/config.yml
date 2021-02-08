@@ -129,7 +129,7 @@ workflows:
   version: 2
   test-and-build:
     jobs:
-      # - 'Unit Testing'
+      - 'Unit Testing'
       - 'Build'
       - 'Integration Testing':
           requires:
