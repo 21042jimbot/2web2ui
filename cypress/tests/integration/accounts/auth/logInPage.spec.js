@@ -8,22 +8,21 @@
 
 describe('The log in page', () => {
   beforeEach(() => {
-    cy.clearCookies();
+    cy.clearCookies(); // Clear auth-related cookies for this particular test
     cy.visit('/auth');
   });
 
   it('renders a "Required" error message when no email address is entered', () => {
     cy.findByText('Required').should('not.exist');
-    cy.get('[data-id="button-log-in"]').click();
+    cy.findByRole('button', { name: 'Log In' })
+      .should('be.visible')
+      .click();
 
     cy.findByText('Required').should('be.visible');
   });
 
-  it('renders a "Keep me logged in" checkbox', () => {
+  it('renders a "Keep me logged in" checkbox and has a link to the forgot password flow', () => {
     cy.findByLabelText('Keep me logged in').should('be.visible');
-  });
-
-  it('has a link to the forgot password flow', () => {
     cy.findByText('Forgot your password?').click();
 
     cy.title().should('include', 'Reset Password');
@@ -58,7 +57,7 @@ describe('The log in page', () => {
     });
     cy.findByLabelText('Email or Username').type('baduser123');
     cy.findByLabelText('Password').type('badpassword123');
-    cy.get('[data-id="button-log-in"]').click();
+    cy.findByRole('button', { name: 'Log In' }).click();
     cy.findByText('User credentials are invalid').should('be.visible');
   });
 
