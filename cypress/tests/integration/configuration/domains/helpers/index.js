@@ -47,14 +47,3 @@ export function stubTrackingDomains({
     statusCode,
   });
 }
-
-// export function stubAccounts({
-//   fixture = 'account/200.get.json',
-//   requestAlias = 'accountDomainsReq',
-// }) {
-//   return cy.stubRequest({
-//     url: '/api/v1/account',
-//     fixture,
-//     requestAlias,
-//   });
-// }
