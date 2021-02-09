@@ -3,6 +3,7 @@ import {
   getGroupingFields,
   getIterableFormattedGroupings,
   getHasDuplicateFilters,
+  getValidFilters,
 } from '../';
 import * as helpers from '../';
 
@@ -510,6 +511,115 @@ describe('Report Builder helpers', () => {
       ];
 
       expect(getHasDuplicateFilters(filters)).toBe(true);
+    });
+  });
+
+  describe('getValidFilters', () => {
+    it('returns the same array when all filters are valid', () => {
+      expect(getValidFilters(EXAMPLE_GROUPINGS)).toEqual(EXAMPLE_GROUPINGS);
+    });
+    it('removes filters with invalid comparator types', () => {
+      const input = [
+        {
+          AND: {
+            domains: {
+              eq: ['gmail.com', 'yahoo.com', 'hotmail.com'],
+              like: ['mail'],
+            },
+            sending_domains: {
+              notEq: ['sparkpost.com'],
+            },
+          },
+        },
+        {
+          OR: {
+            templates: {
+              eq: ['default'],
+            },
+            subaccounts: {
+              eq: ['24'],
+              not_valid_comparator: ['33', '34', '35'], //Invalid comparator type
+            },
+          },
+        },
+      ];
+      expect(getValidFilters(input)).toEqual([EXAMPLE_GROUPINGS[0]]);
+    });
+    it('removes filters with invalid filter types', () => {
+      const input = [
+        {
+          AND: {
+            domains: {
+              eq: ['gmail.com', 'yahoo.com', 'hotmail.com'],
+              like: ['mail'],
+            },
+            sending_domains: {
+              notEq: ['sparkpost.com'],
+            },
+          },
+        },
+        {
+          OR: {
+            templates: {
+              eq: ['default'],
+            },
+            something: {
+              //Invalid filter type
+              eq: ['24'],
+              like: ['33', '34', '35'],
+            },
+          },
+        },
+      ];
+      expect(getValidFilters(input)).toEqual([EXAMPLE_GROUPINGS[0]]);
+    });
+    it('removes filters with invalid comparator conjugations', () => {
+      const input = [
+        {
+          AND: {
+            domains: {
+              eq: ['gmail.com', 'yahoo.com', 'hotmail.com'],
+              like: ['mail'],
+            },
+            sending_domains: {
+              notEq: ['sparkpost.com'],
+            },
+          },
+        },
+        {
+          XOR: {
+            //Invalid comparator conjugation
+            templates: {
+              eq: ['default'],
+            },
+            subaccounts: {
+              eq: ['24'],
+              like: ['33', '34', '35'],
+            },
+          },
+        },
+      ];
+      expect(getValidFilters(input)).toEqual([EXAMPLE_GROUPINGS[0]]);
+    });
+    it('returns empty array when all filters are invalid', () => {
+      const input = [
+        {
+          XOR: {
+            domains: {
+              eq: ['gmail.com', 'yahoo.com', 'hotmail.com'],
+              haha: ['mail'],
+            },
+          },
+        },
+        {
+          Foo: {
+            bar: {
+              baz: ['default'],
+            },
+          },
+        },
+      ];
+      expect(getValidFilters(input)).toEqual([]);
     });
   });
 });

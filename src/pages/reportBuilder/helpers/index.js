@@ -373,3 +373,36 @@ export function getHasDuplicateFilters(filters) {
   // If there are more filters than unique filters, then there must be a duplicate present
   return filters.length > uniqueFilters.length;
 }
+const FILTERS_KEY_MAP = Object.values(REPORT_BUILDER_FILTER_KEY_MAP).reduce((map, key) => {
+  map.set(key, true);
+  return map;
+}, new Map());
+/**
+ * Within a filter grouping, this function returns `true` when duplicate filters are present.
+ * Only the "type" and "compareBy" keys are relevant when making this comparison.
+ *
+ * @param {array} filters - iterable array of filter objects derived from `getIterableFormattedGroupings`
+ *
+ */
+export function getValidFilters(filters) {
+  // Simplifies filters according to relevant keys
+  const validFiltersArray = filters.map(grouping => {
+    const groupingType = Object.keys(grouping)[0];
+
+    if (groupingType.toUpperCase() !== 'AND' && groupingType.toUpperCase() !== 'OR') {
+      return false;
+    }
+    const filterType = grouping[groupingType];
+    return Object.keys(filterType).every(filter => {
+      if (!FILTERS_KEY_MAP.has(filter)) {
+        return false;
+      }
+      return Object.keys(filterType[filter]).every(comparator => {
+        return ['eq', 'noteq', 'like', 'notlike'].includes(comparator.toLowerCase());
+      });
+    });
+  });
+  return validFiltersArray
+    .map((isValidFilter, index) => (isValidFilter ? filters[index] : false))
+    .filter(Boolean);
+}
