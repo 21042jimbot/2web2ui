@@ -2,7 +2,11 @@ import React, { useCallback, useContext, useMemo, useReducer, createContext } fr
 import moment from 'moment';
 import { connect, useDispatch } from 'react-redux';
 import { getLocalTimezone, getRelativeDates } from 'src/helpers/date';
-import { getMetricsFromKeys, getRollupPrecision as getPrecision, getValidDateRange } from 'src/helpers/metrics';
+import {
+  getMetricsFromKeys,
+  getRollupPrecision as getPrecision,
+  getValidDateRange,
+} from 'src/helpers/metrics';
 import { REPORT_BUILDER_FILTER_KEY_MAP } from 'src/constants';
 import { stringifyTypeaheadfilter } from 'src/helpers/string';
 import config from 'src/config';
@@ -38,7 +42,7 @@ const reducer = (state, action) => {
     }
     case 'UPDATE_REPORT_OPTIONS': {
       const { payload, meta } = action;
-      const { subaccounts } = meta;
+      const { subaccounts, dispatchAlert } = meta;
       let update = { ...state, ...payload };
 
       if (!update.timezone) {
