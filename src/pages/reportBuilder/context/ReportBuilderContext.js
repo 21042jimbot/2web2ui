@@ -1,17 +1,20 @@
 import React, { useCallback, useContext, useMemo, useReducer, createContext } from 'react';
 import moment from 'moment';
-import { connect } from 'react-redux';
-import { getRelativeDates } from 'src/helpers/date';
-import { getMetricsFromKeys, getRollupPrecision as getPrecision } from 'src/helpers/metrics';
+import { connect, useDispatch } from 'react-redux';
+import { getLocalTimezone, getRelativeDates } from 'src/helpers/date';
+import { getMetricsFromKeys, getRollupPrecision as getPrecision, getValidDateRange } from 'src/helpers/metrics';
 import { REPORT_BUILDER_FILTER_KEY_MAP } from 'src/constants';
-import { getLocalTimezone } from 'src/helpers/date';
 import { stringifyTypeaheadfilter } from 'src/helpers/string';
 import config from 'src/config';
+import { map as metricsMap } from 'src/config/metrics';
+import { timezoneMap } from 'src/components/typeahead/TimezoneTypeahead';
 import {
   getIterableFormattedGroupings,
   getApiFormattedGroupings,
   hydrateFilters,
+  getValidFilters,
 } from '../helpers';
+import { showAlert } from 'src/actions/globalAlert';
 
 const ReportOptionsContext = createContext({});
 
@@ -42,19 +45,59 @@ const reducer = (state, action) => {
         update.timezone = getLocalTimezone();
       }
 
+      if (!timezoneMap[update.timezone]) {
+        dispatchAlert({
+          type: 'error',
+          message: `Invalid Timezone`,
+        });
+        update.timezone = getLocalTimezone();
+      }
+
       if (!update.metrics) {
         update.metrics = config.reportBuilder.defaultMetrics;
+      } else {
+        if (!update.metrics.every(metric => metricsMap[metric])) {
+          dispatchAlert({
+            type: 'error',
+            message: `Invalid Metric`,
+          });
+          update.metrics = update.metrics.filter(metric => metricsMap[metric]);
+        }
       }
 
       if (payload.filters) {
-        update.filters = hydrateFilters(payload.filters, { subaccounts });
+        const rawFilters = hydrateFilters(payload.filters, { subaccounts });
+        const validatedFilters = getValidFilters(rawFilters);
+
+        if (validatedFilters.length !== rawFilters.length) {
+          dispatchAlert({
+            type: 'error',
+            message: `Invalid Filter`,
+          });
+        }
+        update.filters = validatedFilters;
       }
+      const updatePrecision = update.precision || 'hour'; // Default to hour since it's the recommended rollup precision for 7 days
 
       if (!update.relativeRange) {
         update.relativeRange = '7days';
+      } else {
+        try {
+          getValidDateRange({
+            from: moment(update.from),
+            to: moment(update.to),
+            preventFuture: true,
+            precision: updatePrecision,
+            roundToPrecision: true,
+          });
+        } catch (e) {
+          dispatchAlert({
+            type: 'error',
+            message: `Invalid Date`,
+          });
+          update.relativeRange = '7days';
+        }
       }
-
-      const updatePrecision = update.precision || 'hour'; // Default to hour since it's the recommended rollup precision for 7 days
 
       if (update.relativeRange !== 'custom') {
         const { from, to } = getRelativeDates(update.relativeRange, {
@@ -173,16 +216,17 @@ const getSelectors = reportOptions => {
 const ReportOptionsContextProvider = props => {
   const { subaccounts } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const dispatchGlobal = useDispatch();
+  const dispatchAlert = props => dispatchGlobal(showAlert(props));
   const refreshReportOptions = useCallback(
     payload => {
       return dispatch({
         type: 'UPDATE_REPORT_OPTIONS',
         payload,
-        meta: { subaccounts },
+        meta: { subaccounts, dispatchAlert },
       });
     },
-    [dispatch, subaccounts],
+    [dispatch, subaccounts, dispatchAlert],
   );
 
   const addFilters = useCallback(

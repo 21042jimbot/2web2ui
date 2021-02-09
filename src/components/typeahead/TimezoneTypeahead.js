@@ -33,6 +33,14 @@ export const options = moment.tz
 
 options.unshift(UTC_OPTION);
 
+export const timezoneMap = options.reduce(
+  (accumulator = {}, timezone) => ({
+    ...accumulator,
+    [timezone.value]: true,
+  }),
+  {},
+);
+
 export const TimezoneTypeahead = props => {
   const {
     initialValue,
