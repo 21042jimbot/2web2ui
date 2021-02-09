@@ -373,35 +373,46 @@ export function getHasDuplicateFilters(filters) {
   // If there are more filters than unique filters, then there must be a duplicate present
   return filters.length > uniqueFilters.length;
 }
+
+/**
+ * Hashmap of valid filter types
+ */
 const FILTERS_KEY_MAP = Object.values(REPORT_BUILDER_FILTER_KEY_MAP).reduce((map, key) => {
   map.set(key, true);
   return map;
 }, new Map());
 /**
- * Within a filter grouping, this function returns `true` when duplicate filters are present.
- * Only the "type" and "compareBy" keys are relevant when making this comparison.
+ * Returns a new array of only valid filters. It only removes at the top level. If any part of
+ * the filter is invalid, it will remove the entire top level filter.
  *
- * @param {array} filters - iterable array of filter objects derived from `getIterableFormattedGroupings`
+ * @param {array} filters - iterable array of filter objects derived from `hydrateFilters`
  *
+ * @returns {array} - Array of only valid filters.
  */
 export function getValidFilters(filters) {
-  // Simplifies filters according to relevant keys
+  //remaps top level comparators to true/false
+  //EX: [{AND:{...}},{OR:{...}}] => [true ,false] where true = valid filter and false = invalid filter
   const validFiltersArray = filters.map(grouping => {
     const groupingType = Object.keys(grouping)[0];
 
+    //Checks that the top level comparison conjugate is AND/OR
     if (groupingType.toUpperCase() !== 'AND' && groupingType.toUpperCase() !== 'OR') {
       return false;
     }
+
     const filterType = grouping[groupingType];
+    //Checks that every filter is valid
     return Object.keys(filterType).every(filter => {
       if (!FILTERS_KEY_MAP.has(filter)) {
         return false;
       }
+      //Checks that every comparator is allowed
       return Object.keys(filterType[filter]).every(comparator => {
         return ['eq', 'noteq', 'like', 'notlike'].includes(comparator.toLowerCase());
       });
     });
   });
+  //Re-maps the truthy filters to the actual filters and removes all the falsy ones.
   return validFiltersArray
     .map((isValidFilter, index) => (isValidFilter ? filters[index] : false))
     .filter(Boolean);
