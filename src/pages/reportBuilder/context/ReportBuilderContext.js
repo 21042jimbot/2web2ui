@@ -217,7 +217,7 @@ const ReportOptionsContextProvider = props => {
   const { subaccounts } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
   const dispatchGlobal = useDispatch();
-  const dispatchAlert = props => dispatchGlobal(showAlert(props));
+  const dispatchAlert = useCallback(props => dispatchGlobal(showAlert(props)), [dispatchGlobal]);
   const refreshReportOptions = useCallback(
     payload => {
       return dispatch({
