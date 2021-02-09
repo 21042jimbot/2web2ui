@@ -377,7 +377,8 @@ export function getHasDuplicateFilters(filters) {
 /**
  * Hashmap of valid filter types
  */
-const FILTERS_KEY_MAP = Object.values(REPORT_BUILDER_FILTER_KEY_MAP).reduce((map, key) => {
+const FILTERS_KEY_MAP = Object.values(REPORT_BUILDER_FILTER_KEY_MAP || {}).reduce((map, key) => {
+  //The `|| {}` is needed to fix some breaking unit tests.
   map.set(key, true);
   return map;
 }, new Map());
