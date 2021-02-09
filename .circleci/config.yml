@@ -3,6 +3,7 @@ version: 2.1
 defaults: &defaults
   docker:
     - image: circleci/node:10.17.0
+  resource_class: large
 
 commands:
   # NPM caching commands based on: https://circleci.com/docs/2.0/caching/#restoring-cache
@@ -97,7 +98,7 @@ jobs:
   'Integration Testing':
     docker:
       - image: cypress/browsers
-    parallelism: 6
+    parallelism: 7
     steps:
       - setup
       # Restores the /build folder from the previous job
