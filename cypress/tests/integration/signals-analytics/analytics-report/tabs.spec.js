@@ -53,7 +53,7 @@ describe('Analytics Report report tabs', () => {
       cy.get('tbody tr').within(() => {
         cy.get('td')
           .eq(0)
-          .should('have.text', '0%');
+          .should('have.text', '17 (0%)');
 
         cy.get('td')
           .eq(1)
